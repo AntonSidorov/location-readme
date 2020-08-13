@@ -61,13 +61,13 @@ jobs:
           service_account_email: ${{ secrets.GCP_SERVICE_ACC_EMAIL }}
           service_account_key: ${{ secrets.GCP_SERVICE_ACC_KEY }}
           export_default_credentials: true
-      - name: Build angular project
+      - name: Build graphql project
         run: |
           echo $BE_DOT_ENV_TEXT > backend/.env
           cd backend
           npm ci
           npm run build:prod
-      - name: Build frontend docker image
+      - name: Build backend docker image
         run: |
           echo $(pwd)
           cd backend
