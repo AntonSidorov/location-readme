@@ -3,6 +3,6 @@ export const environment = {
   backend: '',
   auth0: {
     domain: '',
-    clientId: '',
+    client_id: '',
   },
 };
