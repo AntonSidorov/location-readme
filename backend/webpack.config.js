@@ -27,6 +27,6 @@ module.exports = {
     plugins: [new TsconfigPathsPlugin({ configFile: 'tsconfig.json' })],
   },
   plugins: [new NodemonPlugin(), new Dotenv()],
-  // externals: [nodeExternals()],
+  externals: [nodeExternals()],
   devtool: 'source-map',
 };

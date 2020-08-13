@@ -9,7 +9,6 @@ on:
 
 env:
   FE_PROD_ENV_TEXT: ${{secrets.PROD_ENV_TS}}
-  BE_DOT_ENV_TEXT: ${{secrets.PROD_DOT_ENV}}
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   RUN_REGION: asia-east1
   SERVICE_NAME_FE: location-readme-frontend
