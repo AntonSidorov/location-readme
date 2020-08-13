@@ -14,9 +14,11 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
         return def.kind === 'OperationDefinition' && def.operation === 'subscription';
       },
       new WebSocketLink({
-        uri: `ws://${environment.backend}`,
+        uri: environment.production ? `wss://${environment.backend}` : `ws://${environment.backend}`,
       }),
-      httpLink.create({ uri: `http://${environment.backend}` })
+      httpLink.create({
+        uri: environment.production ? `https://${environment.backend}` : `http://${environment.backend}`,
+      })
     ),
     cache: new InMemoryCache(),
     connectToDevTools: true,
