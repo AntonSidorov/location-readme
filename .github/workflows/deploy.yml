@@ -12,7 +12,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   RUN_REGION: asia-east1
   SERVICE_NAME_FE: location-readme-frontend
-  SERVICE_NAME_BE: location-readme-backend
+  SERVICE_NAME_BE: location-readme-api
   IS_PRODUCTION: true
 
 jobs:
