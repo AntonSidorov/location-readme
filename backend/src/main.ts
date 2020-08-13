@@ -23,7 +23,7 @@ const apollo = new ApolloServer({
 });
 
 app.use(checkJwt);
-apollo.applyMiddleware({ app });
+apollo.applyMiddleware({ app, cors: { origin: ['http://localhost:4200', environment.allowCors] } });
 apollo.installSubscriptionHandlers(server);
 
 server.listen(environment.port, () => {
