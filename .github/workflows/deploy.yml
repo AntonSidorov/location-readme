@@ -77,7 +77,6 @@ jobs:
         run: |
           cd backend
           gcloud run deploy $SERVICE_NAME_BE \
-          --region $RUN_REGION \
           --image gcr.io/$PROJECT_ID/$SERVICE_NAME_BE:$GITHUB_SHA \
           --platform gke \
           --cluster "${{secrets.CLUSTER_NAME}}" \
