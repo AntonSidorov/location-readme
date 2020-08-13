@@ -10,8 +10,8 @@ ENV AUTH0_DOMAIN=""
 
 WORKDIR /usr/lrb/app
 
-COPY dist/ ./
-COPY node_modules/* ./
+COPY dist/ ./dist/
+COPY node_modules/ ./node_modules/
 
 EXPOSE $PORT
 CMD ["node", "dist/main.js"]

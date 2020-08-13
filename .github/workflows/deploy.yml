@@ -36,6 +36,7 @@ jobs:
           cd frontend
           npm ci
           npm run build:prod
+          rm -r node_modules/
           gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_FE:$GITHUB_SHA
       - name: Deploy to GCP
         run: |
