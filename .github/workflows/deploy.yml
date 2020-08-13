@@ -37,8 +37,9 @@ jobs:
           npm ci
           npm run build:prod
           rm -r node_modules/
-      - name: Push container to gclous
+      - name: Push container to gcloud
         run: |
+          cd frontend
           gcloud config set gcloudignore/enabled false
           gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_FE:$GITHUB_SHA
       - name: Deploy to GCP
