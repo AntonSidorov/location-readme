@@ -30,13 +30,16 @@ jobs:
           service_account_email: ${{ secrets.GCP_SERVICE_ACC_EMAIL }}
           service_account_key: ${{ secrets.GCP_SERVICE_ACC_KEY }}
           export_default_credentials: true
-      - name: Build angular project and push to gcloud
+      - name: Build angular project
         run: |
           echo $FE_PROD_ENV_TEXT > frontend/src/environments/environment.prod.ts
           cd frontend
           npm ci
           npm run build:prod
           rm -r node_modules/
+      - name: Push container to gclous
+        run: |
+          gcloud config set gcloudignore/enabled false
           gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_FE:$GITHUB_SHA
       - name: Deploy to GCP
         run: |
