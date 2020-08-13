@@ -1,0 +1,26 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  user-select: none;
+}
+.poster {
+  display: flex;
+  align-items: center;
+}
+.poster h4 {
+  margin-left: 4px;
+}
+
+p,
+h4 {
+  margin-bottom: auto;
+}
+
+h4 {
+  font-weight: 500;
+}
+
+.poster mat-icon {
+  color: #2783ff;
+}

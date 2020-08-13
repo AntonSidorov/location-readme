@@ -1,0 +1,41 @@
+:host {
+  height: 100%;
+  touch-action: manipulation;
+}
+
+lr-header {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+}
+
+button[mat-fab] {
+  position: absolute;
+  bottom: 40px;
+  left: 10px;
+}
+
+// Customising the google map @angular/component divs
+// To be a bit more visually pleasant
+// :host is important before ::ng-deep here
+//
+// Whenever there is an !important - that is ALWAYS due to the style being set on the element.
+// The only way to override those without !important is to bind directly - which is not feasible
+:host ::ng-deep .gm-style {
+  .gm-style-iw-c {
+    padding: 0;
+  }
+  .gm-style-iw-d {
+    overflow: initial !important;
+
+    // Selecting the direct descendant, have to use * for safety.
+    & > *:not(map-info-window) {
+      padding: 12px;
+    }
+    & + .gm-ui-hover-effect {
+      /* Almost equal to (40 + 8 * 2 - 30) / 2 */
+      top: 14px !important;
+      right: 2px !important;
+    }
+  }
+}

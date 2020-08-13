@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2018",
+    "module": "es2020",
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "lib": ["es2018", "dom", "esnext.asynciterable", "ES2015.Iterable"],
+    "paths": {
+      "@models/*": ["../models/*"]
+    },
+    "allowSyntheticDefaultImports": true
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true
+  }
+}

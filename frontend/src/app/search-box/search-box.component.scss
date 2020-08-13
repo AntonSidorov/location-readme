@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #fff;
+  padding: 3px 0;
+  border-radius: 8px;
+}
+@supports (backdrop-filter: blur(10px)) {
+  :host {
+    background: #ffffff80;
+    backdrop-filter: blur(10px);
+  }
+}
+
+:host ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+mat-form-field {
+  flex: 1;
+  margin-right: 8px;
+}
+.logo {
+  width: 60px;
+  padding: 0 4px;
+}

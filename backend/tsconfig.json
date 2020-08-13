@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["DOM", "ES2015", "ES2017"],
+    "module": "commonjs",
+    "outDir": "../dist",
+    "sourceMap": true,
+    "watch": true,
+    "baseUrl": "./",
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@models/*": ["../models/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "src/**/*.spec.ts"]
+}

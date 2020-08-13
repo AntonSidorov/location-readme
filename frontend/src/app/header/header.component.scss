@@ -1,0 +1,29 @@
+lr-header-auth {
+  grid-area: auth;
+}
+
+lr-search-box {
+  grid-area: search-box;
+  z-index: 2;
+}
+
+lr-search-results {
+  grid-area: search-results;
+}
+
+:host {
+  max-width: 600px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: grid;
+  grid-template-columns: 7fr auto;
+  grid-template-rows: auto auto;
+  gap: 0 8px;
+  grid-template-areas: 'search-box auth' 'search-results .';
+}
+
+lr-search-box,
+lr-header-auth {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+}

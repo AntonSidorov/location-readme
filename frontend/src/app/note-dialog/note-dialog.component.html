@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>{{ isNew ? 'Add a new' : 'Edit' }} note</h1>
+<div mat-dialog-content>
+  <p>What would you like the note to say?</p>
+  <mat-form-field appearance="outline">
+    <mat-label>Note content</mat-label>
+    <textarea
+      cdkFocusInitial
+      matInput
+      [(ngModel)]="note.note"
+      placeholder="For example, 'I really liked the view from here'"
+    ></textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-stroked-button color="accent" [mat-dialog-close]="undefined">
+    Cancel
+  </button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="note">
+    {{ isNew ? 'Add' : 'Save' }}
+  </button>
+</div>

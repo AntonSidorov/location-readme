@@ -1,0 +1,53 @@
+<ng-container *ngIf="{ user: user$ | async, position: currentPosition$ | async } as state">
+  <lr-header
+    (changeNickname)="changeNickname(state.user)"
+    (search)="onSearch($event)"
+    (login)="login()"
+    (logout)="logout()"
+    (searchSelect)="showNote($event)"
+    (searchFocused)="showResults($event)"
+    [user]="state.user"
+    [query]="query$ | async"
+    [notes]="searchResults$ | async"
+    [loading]="searchLoading$ | async"
+    [showSearchResults]="showSearchResults$ | async"
+  ></lr-header>
+  <google-map
+    width="100%"
+    height="100%"
+    [center]="state.position || melbourne"
+    [zoom]="13"
+    (mapClick)="mapClick()"
+    [options]="mapOptions"
+    #map
+  >
+    <ng-container *ngFor="let note of notes$ | async; trackBy: trackById">
+      <!-- the note object has more properties than the position requires, but that's okay. -->
+      <map-marker [position]="note" [options]="options" #marker="mapMarker" (mapClick)="showNote(note)"></map-marker>
+    </ng-container>
+    <map-info-window>
+      <lr-popup
+        *ngIf="selectedNote$ | async as note"
+        [note]="note"
+        [user]="state.user"
+        (edit)="editNote(note)"
+        (delete)="deleteNote(note)"
+        (funny)="markFunny(note)"
+        (helpful)="markHelpful(note)"
+        (searchUser)="onSearch($event)"
+      ></lr-popup>
+    </map-info-window>
+    <map-marker
+      class="special"
+      *ngIf="selectedNote$ | async as note"
+      [position]="note"
+      [options]="options"
+      #selectedMarker="mapMarker"
+      (mapClick)="showNote(note)"
+    ></map-marker>
+    <map-marker *ngIf="state.position" [position]="state.position" [options]="centerOptions"></map-marker>
+  </google-map>
+  <button mat-fab color="primary" *ngIf="state.position" (click)="editNote(newNote(state.position))">
+    <mat-icon>note_add</mat-icon>
+  </button>
+</ng-container>

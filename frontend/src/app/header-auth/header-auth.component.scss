@@ -1,0 +1,20 @@
+:host {
+  background: #3023ae;
+  background: linear-gradient(-45deg, #3023ae, #4f96f8);
+  color: white;
+  display: flex;
+  align-items: center;
+  border-bottom-left-radius: 55px;
+  padding-left: 8px;
+  padding-bottom: 6px;
+}
+
+@media only screen and (min-width: 600px) {
+  .edit {
+    margin-right: 8px;
+  }
+  :host {
+    border-bottom-right-radius: 55px;
+    padding: 0px 18px 6px;
+  }
+}

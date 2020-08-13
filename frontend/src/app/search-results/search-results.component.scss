@@ -1,0 +1,47 @@
+:host {
+  background: #fff;
+  max-height: 50vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0 0 8px 8px;
+  display: block;
+}
+
+:host(.has-items) lr-search-result:first-child {
+  margin-top: -5px;
+  /*5px + 8px*/
+  padding-top: 13px;
+}
+
+:host(.has-items) lr-search-result:last-child {
+  padding-bottom: 12px;
+}
+:host(.loading) {
+  overflow: initial;
+}
+:host(.empty) {
+  padding: 16px 8px;
+}
+
+mat-spinner {
+  margin: 8px auto;
+}
+
+@supports (backdrop-filter: blur(10px)) {
+  :host {
+    background: #ffffff80;
+    backdrop-filter: blur(15px);
+    min-height: 1px;
+  }
+}
+
+lr-search-result + lr-search-result {
+  border-top: 1px solid #ccc;
+}
+
+/* Cap the max height of the result screen at 500px, although even that might be too big. */
+@media only screen and (min-height: 1000px) {
+  :host {
+    max-height: 500px;
+  }
+}

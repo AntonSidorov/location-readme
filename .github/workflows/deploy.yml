@@ -1,0 +1,28 @@
+# Simple google cloud run deployment workflow
+
+on:
+  push:
+    branches: [master]
+
+env:
+  PROD_ENV_TEXT: ${{secrets.PROD_ENV_TS}}
+
+jobs:
+  test-job:
+    name: Test job for environment variables
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Test
+        run: |
+          echo $PROD_ENV_TEXT >> frontend/src/environments/environment.prod.ts
+          cd frontend
+          npm i
+          npm run build:prod
+          cd ../
+      - name: upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: test123
+          path: frontend/dist

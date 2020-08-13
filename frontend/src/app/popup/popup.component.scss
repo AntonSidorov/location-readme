@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  font-size: 14px;
+  max-width: 400px;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+main {
+  padding: 16px 12px;
+}
+
+footer {
+  padding: 8px 12px;
+  border-top: 1px solid rgba(202, 202, 202, 0.5);
+}
+
+header,
+header .group,
+footer,
+footer .group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+footer .group {
+  flex: 1;
+}
+
+footer .left.group {
+  flex-direction: row-reverse;
+  border-right: 1px solid rgba(202, 202, 202, 0.5);
+}
+
+footer .group p {
+  margin: auto 12px;
+  white-space: nowrap;
+}
+
+header p,
+header h4 {
+  margin: auto 4px;
+}
+
+header {
+  box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.05);
+  padding: 8px 34px 8px 12px;
+  justify-content: space-between;
+}
