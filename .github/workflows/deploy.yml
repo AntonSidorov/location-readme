@@ -79,4 +79,4 @@ jobs:
           --region $RUN_REGION \
           --image gcr.io/$PROJECT_ID/$SERVICE_NAME_BE:$GITHUB_SHA \
           --platform managed \
-          --set-env-vars DB_STRING=${{secrets.DB_STRING}},DB_NAME=${{secrets.DB_NAME}},AUTH0_DOMAIN=${{secrets.AUTH0_DOMAIN}},ALLOW_CORS=${{secrets.ALLOW_CORS}}
+          --set-env-vars ALLOW_CORS="${{secrets.ALLOW_CORS}}",DB_NAME="${{secrets.DB_NAME}}",AUTH0_DOMAIN="${{secrets.AUTH0_DOMAIN}}",DB_STRING="${{secrets.DB_STRING}}"
