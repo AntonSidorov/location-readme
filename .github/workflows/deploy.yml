@@ -1,28 +1,82 @@
 # Simple google cloud run deployment workflow
 
+# TODO: this needs a better PR setup in the future
 on:
   push:
     branches: [master]
+  pull_request:
+    branches: [master]
 
 env:
-  PROD_ENV_TEXT: ${{secrets.PROD_ENV_TS}}
+  FE_PROD_ENV_TEXT: ${{secrets.PROD_ENV_TS}}
+  BE_DOT_ENV_TEXT: ${{secrets.PROD_DOT_ENV}}
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  RUN_REGION: asia-east1
+  SERVICE_NAME_FE: location-readme-frontend
+  SERVICE_NAME_BE: location-readme-backend
+  IS_PRODUCTION: true
 
 jobs:
-  test-job:
-    name: Test job for environment variables
+  frontend:
+    name: Build and deploy the frontend
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Test
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_SERVICE_ACC_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACC_KEY }}
+          export_default_credentials: true
+      - name: Build angular project
+        run: |
+          echo $FE_PROD_ENV_TEXT > frontend/src/environments/environment.prod.ts
+          cd frontend
+          npm ci
+          npm run build:prod
+      - name: Build frontend docker image
+        run: |
+          cd frontend
+          gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_FE:$GITHUB_SHA
+      - name: Deploy to GCP
+        run: |
+          cd frontend
+          gcloud run deploy $SERVICE_NAME_FE \
+          --region $RUN_REGION \
+          --image gcr.io/$PROJECT_ID/$SERVICE_NAME_FE:$GITHUB_SHA \
+          --platform managed
+
+  backend:
+    name: Build and deploy the backend
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_SERVICE_ACC_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACC_KEY }}
+          export_default_credentials: true
+      - name: Build angular project
+        run: |
+          echo $BE_DOT_ENV_TEXT > backend/.env
+          cd backend
+          npm ci
+          npm run build:prod
+      - name: Build frontend docker image
         run: |
           echo $(pwd)
-          echo $PROD_ENV_TEXT > frontend/src/environments/environment.prod.ts
-          cd frontend
-          npm i
-          npm run build:prod
-      - name: upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: test123
-          path: frontend/dist
+          cd backend
+          gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_BE:$GITHUB_SHA
+      - name: Deploy to GCP
+        run: |
+          cd backend
+          gcloud run deploy $SERVICE_NAME_BE \
+          --region $RUN_REGION \
+          --image gcr.io/$PROJECT_ID/$SERVICE_NAME_BE:$GITHUB_SHA \
+          --platform managed \
+          --set-env-vars DB_STRING=${{secrets.DB_STRING}},DB_NAME=${{secrets.DB_NAME}},AUTH0_DOMAIN=${{secrets.AUTH0_DOMAIN}}
