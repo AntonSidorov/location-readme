@@ -30,15 +30,12 @@ jobs:
           service_account_email: ${{ secrets.GCP_SERVICE_ACC_EMAIL }}
           service_account_key: ${{ secrets.GCP_SERVICE_ACC_KEY }}
           export_default_credentials: true
-      - name: Build angular project
+      - name: Build angular project and push to gcloud
         run: |
           echo $FE_PROD_ENV_TEXT > frontend/src/environments/environment.prod.ts
           cd frontend
           npm ci
           npm run build:prod
-      - name: Build frontend docker image
-        run: |
-          cd frontend
           gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_FE:$GITHUB_SHA
       - name: Deploy to GCP
         run: |
@@ -69,7 +66,6 @@ jobs:
           npm run build:prod
       - name: Build backend docker image
         run: |
-          echo $(pwd)
           cd backend
           gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_BE:$GITHUB_SHA
       - name: Deploy to GCP

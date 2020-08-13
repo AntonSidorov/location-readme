@@ -5,8 +5,8 @@ RUN apk add --no-cache curl
 
 WORKDIR /usr/lrf/app
 
-COPY nginx.conf /etc/nginx/conf.d/nginx.conf
-COPY dist/location-readme/ ./
+COPY ./nginx.conf /etc/nginx/conf.d/nginx.conf
+COPY ./dist/location-readme/ ./
 
 EXPOSE 8000
 
