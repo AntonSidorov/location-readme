@@ -11,6 +11,7 @@ env:
   FE_PROD_ENV_TEXT: ${{secrets.PROD_ENV_TS}}
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   RUN_REGION: asia-east1
+  CLUSTER_REGION: asia-east1-a
   SERVICE_NAME_FE: location-readme-frontend
   SERVICE_NAME_BE: location-readme-api
   IS_PRODUCTION: true
@@ -78,5 +79,8 @@ jobs:
           gcloud run deploy $SERVICE_NAME_BE \
           --region $RUN_REGION \
           --image gcr.io/$PROJECT_ID/$SERVICE_NAME_BE:$GITHUB_SHA \
-          --platform managed \
+          --platform gke \
+          --cluster "${{secrets.CLUSTER_NAME}}" \
+          --cluster-location $CLUSTER_REGION \
+          --namespace=default \
           --set-env-vars ALLOW_CORS="${{secrets.ALLOW_CORS}}",DB_NAME="${{secrets.DB_NAME}}",AUTH0_DOMAIN="${{secrets.AUTH0_DOMAIN}}",DB_STRING="${{secrets.DB_STRING}}"
