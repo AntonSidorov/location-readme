@@ -41,6 +41,7 @@ jobs:
         with:
           app-name: ${{secrets.APP_NAME_FE}}
           images: $AZURE_REGISTRY_FE:$GITHUB_SHA
+          publish-profile: ${{secrets.AZURE_FE_PROFILE}}
 
   backend:
     name: Build and deploy the backend
@@ -69,3 +70,4 @@ jobs:
         with:
           app-name: ${{secrets.APP_NAME_BE}}
           images: $AZURE_REGISTRY_BE:$GITHUB_SHA
+          publish-profile: ${{secrets.AZURE_BE_PROFILE}}
