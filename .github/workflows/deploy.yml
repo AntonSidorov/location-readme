@@ -8,12 +8,10 @@ on:
     branches: [master]
 
 env:
+  AZURE_REGISTRY: ${{secrets.AZURE_REGISTRY}}
+  AZURE_REGISTRY_FE: ${{AZURE_REGISTRY}}/lr-frontend
+  AZURE_REGISTRY_BE: ${{AZURE_REGISTRY}}/lr-backend
   FE_PROD_ENV_TEXT: ${{secrets.PROD_ENV_TS}}
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  RUN_REGION: asia-east1
-  CLUSTER_REGION: asia-east1-a
-  SERVICE_NAME_FE: location-readme-frontend
-  SERVICE_NAME_BE: location-readme-api
   IS_PRODUCTION: true
 
 jobs:
@@ -23,32 +21,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: azure/docker-login@v1
         with:
-          version: '290.0.1'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_SERVICE_ACC_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SERVICE_ACC_KEY }}
-          export_default_credentials: true
+          login-server: ${{AZURE_REGISTRY}}
+          username: ${{secrets.AZURE_REGISTRY_USERNAME}}
+          password: ${{secrets.AZURE_REGISTRY_PASSWORD}}
       - name: Build angular project
         run: |
-          echo $FE_PROD_ENV_TEXT > frontend/src/environments/environment.prod.ts
+          echo ${{FE_PROD_ENV_TEXT}} > frontend/src/environments/environment.prod.ts
           cd frontend
           npm ci
           npm run build:prod
-          rm -r node_modules/
-      - name: Push container to gcloud
+      - name: Build docker image and push
         run: |
           cd frontend
-          gcloud config set gcloudignore/enabled false
-          gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_FE:$GITHUB_SHA
-      - name: Deploy to GCP
-        run: |
-          cd frontend
-          gcloud run deploy $SERVICE_NAME_FE \
-          --region $RUN_REGION \
-          --image gcr.io/$PROJECT_ID/$SERVICE_NAME_FE:$GITHUB_SHA \
-          --platform managed
+          docker build . -t ${{AZURE_REGISTRY_FE}}:${{GITHUB_SHA}}
+          docker push ${{AZURE_REGISTRY_FE}}:${{GITHUB_SHA}}
+      - name: Deploy to azure
+        with:
+          app-name: ${{secrets.APP_NAME_FE}}
+          images: ${{AZURE_REGISTRY_FE}}:${{GITHUB_SHA}}
 
   backend:
     name: Build and deploy the backend
@@ -56,30 +48,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: azure/docker-login@v1
         with:
-          version: '290.0.1'
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_SERVICE_ACC_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SERVICE_ACC_KEY }}
-          export_default_credentials: true
+          login-server: ${{AZURE_REGISTRY}}
+          username: ${{secrets.AZURE_REGISTRY_USERNAME}}
+          password: ${{secrets.AZURE_REGISTRY_PASSWORD}}
       - name: Build graphql project
         run: |
-          echo $BE_DOT_ENV_TEXT > backend/.env
           cd backend
           npm ci
           npm run build:prod
-      - name: Build backend docker image
-        run: |
-          cd backend
-          gcloud builds submit -t gcr.io/$PROJECT_ID/$SERVICE_NAME_BE:$GITHUB_SHA
-      - name: Deploy to GCP
-        run: |
-          cd backend
-          gcloud run deploy $SERVICE_NAME_BE \
-          --image gcr.io/$PROJECT_ID/$SERVICE_NAME_BE:$GITHUB_SHA \
-          --platform gke \
-          --cluster "${{secrets.CLUSTER_NAME}}" \
-          --cluster-location $CLUSTER_REGION \
-          --namespace=default \
-          --set-env-vars ALLOW_CORS="${{secrets.ALLOW_CORS}}",DB_NAME="${{secrets.DB_NAME}}",AUTH0_DOMAIN="${{secrets.AUTH0_DOMAIN}}",DB_STRING="${{secrets.DB_STRING}}"
+      - name: Build docker image and push
+          run: |
+            cd frontend
+            docker build . -t ${{AZURE_REGISTRY_BE}}:${{GITHUB_SHA}}
+            docker push ${{AZURE_REGISTRY_BE}}:${{GITHUB_SHA}}
+        - name: Deploy to azure
+          with:
+            app-name: ${{secrets.APP_NAME_BE}}
+            images: ${{AZURE_REGISTRY_BE}}:${{GITHUB_SHA}}
