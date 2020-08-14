@@ -8,7 +8,6 @@ on:
     branches: [master]
 
 env:
-  AZURE_REGISTRY: ${{secrets.AZURE_REGISTRY}}
   AZURE_REGISTRY_FE: ${{secrets.AZURE_REGISTRY}}/lr-frontend
   AZURE_REGISTRY_BE: ${{secrets.AZURE_REGISTRY}}/lr-backend
   FE_PROD_ENV_TEXT: ${{secrets.PROD_ENV_TS}}
@@ -23,7 +22,7 @@ jobs:
         uses: actions/checkout@v1
       - uses: azure/docker-login@v1
         with:
-          login-server: $AZURE_REGISTRY
+          login-server: ${{secrets.AZURE_REGISTRY}}
           username: ${{secrets.AZURE_REGISTRY_USERNAME}}
           password: ${{secrets.AZURE_REGISTRY_PASSWORD}}
       - name: Build angular project
@@ -51,7 +50,7 @@ jobs:
         uses: actions/checkout@v1
       - uses: azure/docker-login@v1
         with:
-          login-server: $AZURE_REGISTRY
+          login-server: ${{secrets.AZURE_REGISTRY}}
           username: ${{secrets.AZURE_REGISTRY_USERNAME}}
           password: ${{secrets.AZURE_REGISTRY_PASSWORD}}
       - name: Build graphql project
