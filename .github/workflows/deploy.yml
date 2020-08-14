@@ -40,7 +40,7 @@ jobs:
         name: Deploy to azure
         with:
           app-name: ${{secrets.APP_NAME_FE}}
-          images: ${{secrets.AZURE_REGISTRY}}/lr-frontend:${{GITHUB_SHA}}
+          images: ${secrets.AZURE_REGISTRY_FE}:${GITHUB_SHA}
           publish-profile: ${{secrets.AZURE_FE_PROFILE}}
 
   backend:
@@ -69,5 +69,5 @@ jobs:
         name: Deploy to azure
         with:
           app-name: ${{secrets.APP_NAME_BE}}
-          images: ${{secrets.AZURE_REGISTRY}}/lr-backend:${{GITHUB_SHA}}
+          images: ${secrets.AZURE_REGISTRY_BE}:${GITHUB_SHA}
           publish-profile: ${{secrets.AZURE_BE_PROFILE}}
