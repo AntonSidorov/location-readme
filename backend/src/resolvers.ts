@@ -63,7 +63,7 @@ export const resolvers: IResolvers<any, ApolloContext> = {
         .toArray();
       return dbResult.map(mapUserToListOfNotes).reduce(flatten, []);
     },
-    user: async (_, __, { db, userId, userJwt }): Promise<IUser> => {
+    user: async (_, __, { db, userJwt }): Promise<IUser> => {
       if (!userJwt) {
         throw new Error('You need to be authorized to access your profile.');
       }
@@ -159,8 +159,9 @@ export const resolvers: IResolvers<any, ApolloContext> = {
 
       const result = await db.collection('users').updateOne({ _id: userId }, { $set: { nickname } });
 
-      if (result.modifiedCount < 1) return false;
-      return true;
+      if (result.modifiedCount < 1) throw new Error('An error occured when updating your nickname');
+
+      return await db.collection('users').findOne({ _id: userId });
     },
   },
   Subscription: {

@@ -48,7 +48,7 @@ const SchemaDefinition = gql`
     addNote(note: NoteInput!): Note!
     updateNote(note: NoteUpdateInput!): Note
     removeNote(id: ID!): Boolean
-    updateNickname(nickname: String!): Boolean
+    updateNickname(nickname: String!): User!
   }
   type Subscription {
     noteAdded: Note
