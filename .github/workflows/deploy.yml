@@ -71,3 +71,4 @@ jobs:
           app-name: ${{secrets.APP_NAME_BE}}
           images: ${{env.AZURE_REGISTRY_BE}}:${{github.SHA}}
           publish-profile: ${{secrets.AZURE_BE_PROFILE}}
+# Test commit to validate deployment process
