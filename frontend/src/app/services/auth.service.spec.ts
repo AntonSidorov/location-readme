@@ -20,25 +20,9 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('handleRedirectCallback should be piped from the client', () => {
-    const spy = spyOn(service.auth0Client$, 'pipe');
-    service.handleRedirectCallback$();
-    expect(spy).toHaveBeenCalled();
-  });
-
-  it('user$ observable should be piped from isAuthenticated$', () => {
-    const spy = spyOn(service, 'isAuthenticated$').and.callThrough();
-    service.user$();
-    expect(spy).toHaveBeenCalled();
-  });
-  it('jwt$ observable should be piped from isAuthenticated$', () => {
-    const spy = spyOn(service, 'isAuthenticated$').and.callThrough();
-    service.jwt$();
-    expect(spy).toHaveBeenCalled();
-  });
-  it('getJwt$ observable should be piped from the client', () => {
-    const spy = spyOn(service.auth0Client$, 'pipe').and.callThrough();
-    service.getJwt$();
+  it('ngOnDestroy should emit unsubscribe$', () => {
+    const spy = spyOn(service.unsubscribe$, 'next');
+    service.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
   });
 });

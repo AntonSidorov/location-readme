@@ -9,6 +9,10 @@ export interface IUser {
 export const getUserNickname = (user?: IUser | string) => (typeof user === 'object' ? user.nickname : undefined);
 export const getUserId = (user?: IUser | string) => (typeof user === 'string' ? user : user?._id);
 
-// Checks whether or not
-// We don't need to worry about `getUserId` returning undefined, as me._id cannot be undefined.
-export const isPosterMe = (me: IUser, poster?: IUser | string) => getUserId(poster) === me._id;
+// Checks whether or not two users are the same
+export const areUsersSame = (a?: IUser | string, b?: IUser | string) => {
+  if (!a && !b) {
+    return false;
+  }
+  return getUserId(a) === getUserId(b);
+};

@@ -1,4 +1,11 @@
-<ng-container *ngIf="{ user: user$ | async, position: currentPosition$ | async } as state">
+<ng-container
+  *ngIf="{
+    user: user$ | async,
+    position: currentPosition$ | async,
+    center: initialCenter$ | async,
+    selected: selectedNote$ | async
+  } as state"
+>
   <lr-header
     (changeNickname)="changeNickname(state.user)"
     (search)="onSearch($event)"
@@ -15,9 +22,9 @@
   <google-map
     width="100%"
     height="100%"
-    [center]="state.position || melbourne"
+    [center]="state.center || melbourne"
     [zoom]="13"
-    (mapClick)="mapClick()"
+    (mapClick)="mapClick($event, state.user)"
     [options]="mapOptions"
     #map
   >
@@ -27,27 +34,27 @@
     </ng-container>
     <map-info-window>
       <lr-popup
-        *ngIf="selectedNote$ | async as note"
-        [note]="note"
+        *ngIf="state.selected"
+        [note]="state.selected"
         [user]="state.user"
-        (edit)="editNote(note)"
-        (delete)="deleteNote(note)"
-        (funny)="markFunny(note)"
-        (helpful)="markHelpful(note)"
+        (edit)="editNote(state.selected)"
+        (delete)="deleteNote(state.selected)"
+        (funny)="markFunny(state.selected)"
+        (helpful)="markHelpful(state.selected)"
         (searchUser)="onSearch($event)"
       ></lr-popup>
     </map-info-window>
     <map-marker
       class="special"
-      *ngIf="selectedNote$ | async as note"
-      [position]="note"
+      *ngIf="state.selected"
+      [position]="state.selected"
       [options]="options"
       #selectedMarker="mapMarker"
-      (mapClick)="showNote(note)"
+      (mapClick)="showNote(state.selected)"
     ></map-marker>
     <map-marker *ngIf="state.position" [position]="state.position" [options]="centerOptions"></map-marker>
   </google-map>
-  <button mat-fab color="primary" *ngIf="state.position" (click)="editNote(newNote(state.position))">
+  <button mat-fab color="primary" *ngIf="state.position && state.user" (click)="editNote(newNote(state.position))">
     <mat-icon>note_add</mat-icon>
   </button>
 </ng-container>

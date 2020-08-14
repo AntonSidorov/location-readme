@@ -1,34 +1,39 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, of, Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { IUser } from '../models';
 import { catchWithUndefined } from '../shared';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
-export class UserService {
+export class UserService implements OnDestroy {
   unsubscribe$ = new Subject<void>();
-  private _nicknameChange$ = new BehaviorSubject(undefined);
-  nicknameChange$ = this._nicknameChange$.asObservable();
 
-  // TODO: handle the user changes in the store. Update the nickname when the operation completes and then re-request the user anyways.
-  user$: Observable<IUser | undefined> =
-    // Any change in the authentication status or the nickname will force this observable to reload again
-    combineLatest([this.auth.isAuthenticated$(), this.nicknameChange$]).pipe(
-      // After an update - the user doesn't reload instantly - good idea to convert it to a behaviour subject
-      switchMap(([v, _]) => (v ? this.api.user$() : of(undefined)))
-    );
+  private _nicknameChange$ = new BehaviorSubject(undefined);
+  private _user$ = new BehaviorSubject<IUser | undefined>(undefined);
+
+  nicknameChange$ = this._nicknameChange$.asObservable();
+  user$ = this._user$.asObservable();
 
   constructor(private api: ApiService, private auth: AuthService) {
+    combineLatest([this.auth.loggedIn$, this.nicknameChange$])
+      .pipe(
+        switchMap(([v, _]) => (v ? this.api.user$() : of(undefined))),
+        tap((v) => this._user$.next(v))
+      )
+      .subscribe();
     this.user$.subscribe();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
   }
 
   async updateNickname(nickname: string) {
     const result = await this.api.updateNickname$({ nickname }).pipe(catchWithUndefined()).toPromise();
-    if (!result) {
-      console.warn('Updating nickname failed');
-    }
+    this._user$.next(result);
+    console.log(this._user$.value);
     this._nicknameChange$.next(undefined);
   }
 }

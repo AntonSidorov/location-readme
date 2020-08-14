@@ -25,6 +25,6 @@ export class AuthInterceptorService implements HttpInterceptor {
       return next.handle(req);
     }
 
-    return this.auth.jwt$().pipe(mergeMap((jwt) => next.handle(req.clone({ setHeaders: this.headers(jwt) }))));
+    return this.auth.jwt$.pipe(mergeMap((jwt) => next.handle(req.clone({ setHeaders: this.headers(jwt) }))));
   }
 }

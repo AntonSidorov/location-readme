@@ -24,6 +24,10 @@ button[mat-fab] {
 :host ::ng-deep .gm-style {
   .gm-style-iw-c {
     padding: 0;
+    @media only screen and (max-width: 385px) {
+      // google maps forces the info windows to be less than we need them to be even though they would still fit
+      max-width: 260px !important;
+    }
   }
   .gm-style-iw-d {
     overflow: initial !important;

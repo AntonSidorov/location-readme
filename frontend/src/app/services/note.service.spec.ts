@@ -84,5 +84,18 @@ describe('NoteService', () => {
     expect(spy).toHaveBeenCalledWith({ id });
   }));
 
+  it('makeMapFromArray should return a valid map from mock notes', () => {
+    const notes = [mockDataset.notes[0], mockDataset.notes[3]];
+    expect(service.makeMapFromArray(notes)).toEqual({ 1: mockDataset.notes[0], 4: mockDataset.notes[3] });
+  });
+
+  it('isNoteSelected should return the value of the underlying BehaviorSubject', () => {
+    (service as any)._selectedNoteId$.next('harry potter');
+    expect(service.isNoteSelected()).toBe(true);
+
+    (service as any)._selectedNoteId$.next(undefined);
+    expect(service.isNoteSelected()).toBe(false);
+  });
+
   afterAll(() => service.ngOnDestroy());
 });

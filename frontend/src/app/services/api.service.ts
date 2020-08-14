@@ -102,7 +102,7 @@ export class ApiService {
 
   updateNickname$ = (variables: { nickname: string }) =>
     this.apollo
-      .mutate<{ updateNickname: boolean }>({ mutation: Mutation.updateNickname, variables })
+      .mutate<{ updateNickname: IUser }>({ mutation: Mutation.updateNickname, variables })
       .pipe(
         extractApolloResult(),
         map((v) => v.updateNickname)

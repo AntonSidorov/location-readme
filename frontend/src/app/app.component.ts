@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
-import { delay, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { delay, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { EditNicknameDialogComponent } from './edit-nickname-dialog/edit-nickname-dialog.component';
 import { NoteDialogComponent } from './note-dialog/note-dialog.component';
@@ -55,6 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
   melbourne: google.maps.LatLngLiteral = { lat: -37.8022739, lng: 144.9459015 };
 
   currentPosition$: Observable<google.maps.LatLngLiteral> = this.geo.current$;
+  initialCenter$ = this.currentPosition$.pipe(take(1));
 
   newNote = noteFromCoordinate;
   trackById = (n: INote) => n._id;
@@ -83,6 +84,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(filter(filterOutFalsy), takeUntil(this.unsubscribe$), delay(0))
       .subscribe(this.openInfoWindow);
   }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
   }
@@ -120,7 +122,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // Need to figure out the logic first before writing tests for this
   /* istanbul ignore next */
-  mapClick() {
+  mapClick(event: google.maps.IconMouseEvent, user: IUser | undefined) {
+    // If the user clicks on a map
+    // And they are logged in
+    // And they are not clicking on a point of interest in a google map
+    // And there is no currently open popup
+    // Then let them make a note at the clicked location
+    if (user !== undefined && event.placeId === undefined && !this.note.isNoteSelected()) {
+      this.editNote(noteFromCoordinate({ lat: event.latLng.lat(), lng: event.latLng.lng() }));
+    }
     this.infoWindow.close();
     this.showResults(false);
     this.note.showNote();

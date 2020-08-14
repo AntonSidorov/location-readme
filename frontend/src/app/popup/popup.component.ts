@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { getUserNickname, INote, isPosterMe, IUser } from '../models';
+import { areUsersSame, getUserNickname, INote, IUser } from '../models';
 
 @Component({
   selector: 'lr-popup[note][user]',
@@ -9,7 +9,7 @@ import { getUserNickname, INote, isPosterMe, IUser } from '../models';
 })
 export class PopupComponent {
   @Input() note: INote;
-  @Input() user: IUser;
+  @Input() user: IUser | undefined;
 
   @Output()
   searchUser = new EventEmitter<string>();
@@ -29,7 +29,7 @@ export class PopupComponent {
   }
 
   get isMyNote(): boolean {
-    return isPosterMe(this.user, this.note.user);
+    return areUsersSame(this.note.user, this.user);
   }
 
   // Given the possible change in logic/complexity - this is separate from other calls

@@ -1,4 +1,5 @@
 import { gql } from 'apollo-angular';
+import { Fragment } from './fragment';
 
 // Only select _id - doesn't matter what the value is, as the subscription will emit a new value anyways.
 const addNote = gql`
@@ -27,8 +28,11 @@ const removeNote = gql`
 // TODO: grab the user object to make sure no delay in updates
 const updateNickname = gql`
   mutation UpdateNickname($nickname: String!) {
-    updateNickname(nickname: $nickname)
+    updateNickname(nickname: $nickname) {
+      ...UserData
+    }
   }
+  ${Fragment.user}
 `;
 
 export const Mutation = { addNote, updateNote, removeNote, updateNickname };

@@ -44,16 +44,18 @@ export class NoteService implements OnDestroy {
   }
 
   async loadNotes() {
-    this._notesMap$.next(
-      (await this.api.notes$().toPromise())
-        .map(({ _id, ...v }) => ({ [_id]: { _id, ...v } }))
-        .reduce((acc, v) => ({ ...acc, ...v }), {})
-    );
+    this._notesMap$.next(this.makeMapFromArray(await this.api.notes$().toPromise()));
+  }
+
+  makeMapFromArray(notes: INote[]): { [key: string]: INote } {
+    return notes.map(({ _id, ...v }) => ({ [_id]: { _id, ...v } })).reduce((acc, v) => ({ ...acc, ...v }), {});
   }
 
   showNote(note?: INote) {
     this._selectedNoteId$.next(note?._id);
   }
+
+  isNoteSelected = () => this._selectedNoteId$.value !== undefined;
 
   async addNote(note: INoteWithoutId) {
     await this.api.addNote$({ note }).pipe(catchWithUndefined()).toPromise();
