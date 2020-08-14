@@ -9,8 +9,8 @@ on:
 
 env:
   AZURE_REGISTRY: ${{secrets.AZURE_REGISTRY}}
-  AZURE_REGISTRY_FE: ${{AZURE_REGISTRY}}/lr-frontend
-  AZURE_REGISTRY_BE: ${{AZURE_REGISTRY}}/lr-backend
+  AZURE_REGISTRY_FE: ${{secrets.AZURE_REGISTRY}}/lr-frontend
+  AZURE_REGISTRY_BE: ${{secrets.AZURE_REGISTRY}}/lr-backend
   FE_PROD_ENV_TEXT: ${{secrets.PROD_ENV_TS}}
   IS_PRODUCTION: true
 
