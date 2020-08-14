@@ -35,13 +35,13 @@ jobs:
       - name: Build docker image and push
         run: |
           cd frontend
-          docker build . -t $AZURE_REGISTRY_FE:${{GITHUB_SHA}}
-          docker push $AZURE_REGISTRY_FE:${{GITHUB_SHA}}
+          docker build . -t $AZURE_REGISTRY_FE:$GITHUB_SHA
+          docker push $AZURE_REGISTRY_FE:$GITHUB_SHA
       - uses: azure/webapps-deploy@v2
         name: Deploy to azure
         with:
           app-name: ${{secrets.APP_NAME_FE}}
-          images: $AZURE_REGISTRY_FE:${{GITHUB_SHA}}
+          images: $AZURE_REGISTRY_FE:$GITHUB_SHA
 
   backend:
     name: Build and deploy the backend
@@ -62,11 +62,11 @@ jobs:
       - name: Build docker image and push
         run: |
           cd backend
-          docker build . -t $AZURE_REGISTRY_BE:${{GITHUB_SHA}}
-          docker push $AZURE_REGISTRY_BE:${{GITHUB_SHA}}
+          docker build . -t $AZURE_REGISTRY_BE:$GITHUB_SHA
+          docker push $AZURE_REGISTRY_BE:$GITHUB_SHA
 
       - uses: azure/webapps-deploy@v2
         name: Deploy to azure
         with:
           app-name: ${{secrets.APP_NAME_BE}}
-          images: $AZURE_REGISTRY_BE:${{GITHUB_SHA}}
+          images: $AZURE_REGISTRY_BE:$GITHUB_SHA
