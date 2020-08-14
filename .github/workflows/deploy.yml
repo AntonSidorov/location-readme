@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v1
       - uses: azure/docker-login@v1
         with:
-          login-server: ${{AZURE_REGISTRY}}
+          login-server: $AZURE_REGISTRY
           username: ${{secrets.AZURE_REGISTRY_USERNAME}}
           password: ${{secrets.AZURE_REGISTRY_PASSWORD}}
       - name: Build angular project
@@ -35,13 +35,13 @@ jobs:
       - name: Build docker image and push
         run: |
           cd frontend
-          docker build . -t ${{AZURE_REGISTRY_FE}}:${{GITHUB_SHA}}
-          docker push ${{AZURE_REGISTRY_FE}}:${{GITHUB_SHA}}
+          docker build . -t $AZURE_REGISTRY_FE:${{GITHUB_SHA}}
+          docker push $AZURE_REGISTRY_FE:${{GITHUB_SHA}}
       - uses: azure/webapps-deploy@v2
         name: Deploy to azure
         with:
           app-name: ${{secrets.APP_NAME_FE}}
-          images: ${{AZURE_REGISTRY_FE}}:${{GITHUB_SHA}}
+          images: $AZURE_REGISTRY_FE:${{GITHUB_SHA}}
 
   backend:
     name: Build and deploy the backend
@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v1
       - uses: azure/docker-login@v1
         with:
-          login-server: ${{AZURE_REGISTRY}}
+          login-server: $AZURE_REGISTRY
           username: ${{secrets.AZURE_REGISTRY_USERNAME}}
           password: ${{secrets.AZURE_REGISTRY_PASSWORD}}
       - name: Build graphql project
@@ -62,11 +62,11 @@ jobs:
       - name: Build docker image and push
         run: |
           cd backend
-          docker build . -t ${{AZURE_REGISTRY_BE}}:${{GITHUB_SHA}}
-          docker push ${{AZURE_REGISTRY_BE}}:${{GITHUB_SHA}}
+          docker build . -t $AZURE_REGISTRY_BE:${{GITHUB_SHA}}
+          docker push $AZURE_REGISTRY_BE:${{GITHUB_SHA}}
 
       - uses: azure/webapps-deploy@v2
         name: Deploy to azure
         with:
           app-name: ${{secrets.APP_NAME_BE}}
-          images: ${{AZURE_REGISTRY_BE}}:${{GITHUB_SHA}}
+          images: $AZURE_REGISTRY_BE:${{GITHUB_SHA}}
