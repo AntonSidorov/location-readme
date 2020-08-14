@@ -28,7 +28,7 @@ jobs:
           password: ${{secrets.AZURE_REGISTRY_PASSWORD}}
       - name: Build angular project
         run: |
-          echo ${{FE_PROD_ENV_TEXT}} > frontend/src/environments/environment.prod.ts
+          echo $FE_PROD_ENV_TEXT > frontend/src/environments/environment.prod.ts
           cd frontend
           npm ci
           npm run build:prod
