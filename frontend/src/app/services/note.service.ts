@@ -18,10 +18,7 @@ export class NoteService implements OnDestroy {
 
   upsertNoteToMap = (note: INote) => this._notesMap$.next({ ...this._notesMap$.value, [note._id]: note });
   removeNoteFromMap = (note: string) => {
-    console.log(note);
     const { [note]: deleted, ...out } = this._notesMap$.value;
-    console.log(deleted);
-    console.log(out);
     this._notesMap$.next(out);
   };
 

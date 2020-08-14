@@ -6,7 +6,6 @@ export class DbSingleton {
 
   public static async instance(): Promise<Db> {
     if (!this._instance) {
-      console.log('not instance');
       this._instance = (await MongoClient.connect(environment.dbString)).db(environment.dbName);
     }
     return this._instance;

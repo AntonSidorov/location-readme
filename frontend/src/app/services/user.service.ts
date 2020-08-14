@@ -33,7 +33,6 @@ export class UserService implements OnDestroy {
   async updateNickname(nickname: string) {
     const result = await this.api.updateNickname$({ nickname }).pipe(catchWithUndefined()).toPromise();
     this._user$.next(result);
-    console.log(this._user$.value);
     this._nicknameChange$.next(undefined);
   }
 }
