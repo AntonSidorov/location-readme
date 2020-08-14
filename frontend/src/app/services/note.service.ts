@@ -60,13 +60,17 @@ export class NoteService implements OnDestroy {
 
   // GraphQL has a hidden __typename property that is not auto-stripped by the client
   // Mutations will go nuts if they see a variable they don't expect.
-  // Because of this I have to add the optional __typename union
-  async editNote(n: INote & { __typename?: string }) {
+  //
+  // Originally I removed the properties through a destructuring/rest assignment
+  // const { __typename, user, ...note } = n;
+  // However! Angular production compiler removes the deletions.
+  // Which is why this is a full destructuring
+  async editNote({ _id, lat, lng, note, funny, helpful }: INote) {
     // Don't send the user back to the API - it already has that info
-    const { user, __typename, ...note } = n;
-    console.log(n);
-    console.log(note);
-    await this.api.updateNote$({ note }).pipe(catchWithUndefined()).toPromise();
+    await this.api
+      .updateNote$({ note: { _id, lat, lng, note, funny, helpful } })
+      .pipe(catchWithUndefined())
+      .toPromise();
   }
 
   async removeNote(id: string) {
