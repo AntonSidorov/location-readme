@@ -64,6 +64,8 @@ export class NoteService implements OnDestroy {
   async editNote(n: INote & { __typename?: string }) {
     // Don't send the user back to the API - it already has that info
     const { user, __typename, ...note } = n;
+    console.log(n);
+    console.log(note);
     await this.api.updateNote$({ note }).pipe(catchWithUndefined()).toPromise();
   }
 
