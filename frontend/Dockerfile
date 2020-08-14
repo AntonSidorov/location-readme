@@ -8,6 +8,6 @@ WORKDIR /usr/lrf/app
 COPY ./nginx.conf /etc/nginx/conf.d/nginx.conf
 COPY ./dist/location-readme ./
 
-EXPOSE 8080
+EXPOSE 80
 
 HEALTHCHECK CMD curl -sf "http://localhost:8000/"
